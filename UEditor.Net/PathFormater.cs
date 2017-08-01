@@ -13,6 +13,12 @@ namespace UEditor.Net
     /// </summary>
     public static class PathFormatter
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="originFileName"></param>
+        /// <param name="pathFormat"></param>
+        /// <returns></returns>
         public static string Format(string originFileName, string pathFormat)
         {
             if (String.IsNullOrWhiteSpace(pathFormat))

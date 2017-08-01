@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace UEditor.Net
@@ -39,7 +40,7 @@ namespace UEditor.Net
         /// <summary>
         /// 
         /// </summary>
-        public override void Process()
+        public async override Task Process()
         {
             try
             {
@@ -60,12 +61,14 @@ namespace UEditor.Net
                     PathToList = "/" + UploadDir + "/" + PathToList.Trim('/');
                 }
                 var localPath = Server.MapPath(PathToList);
-                buildingList.AddRange(Directory.GetFiles(localPath, "*", SearchOption.AllDirectories)
-                    .Where(x => SearchExtensions.Contains(Path.GetExtension(x).ToLower()))
-                    .Reverse()
-                    .Select(x => PathToList + x.Substring(localPath.Length).Replace("\\", "/")));
-                Total = buildingList.Count;
-                FileList = buildingList.Skip(Start).Take(Size).ToArray();
+               await Task.Factory.StartNew(() => {
+                   buildingList.AddRange(Directory.GetFiles(localPath, "*", SearchOption.AllDirectories)
+                  .Where(x => SearchExtensions.Contains(Path.GetExtension(x).ToLower()))
+                  .Reverse()
+                  .Select(x => PathToList + x.Substring(localPath.Length).Replace("\\", "/")));
+                   Total = buildingList.Count;
+                   FileList = buildingList.Skip(Start).Take(Size).ToArray();
+               });
             }
             catch (UnauthorizedAccessException)
             {

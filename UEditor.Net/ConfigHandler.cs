@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 
@@ -13,9 +14,11 @@ namespace UEditor.Net
     {
         public ConfigHandler(HttpContext context) : base(context) { }
 
-        public override void Process()
+        public async override Task Process()
         {
-            WriteJson(Config.Items);
+            await Task.Factory.StartNew(()=>{
+                WriteJson(Config.Items);
+            });
         }
     }
 }

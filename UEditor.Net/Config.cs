@@ -15,7 +15,14 @@ namespace UEditor.Net
     /// </summary>
     public static class Config
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public static string ConfigPath;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configPath"></param>
         public static void InitConfig(string configPath)
         {
             if (Path.IsPathRooted(configPath))
@@ -27,14 +34,23 @@ namespace UEditor.Net
                 ConfigPath = HttpContext.Current.Server.MapPath(configPath);
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
         private static bool noCache = true;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private static JObject BuildItems()
         {
             var json = File.ReadAllText(ConfigPath);
             return JObject.Parse(json);
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public static JObject Items
         {
             get
@@ -48,22 +64,39 @@ namespace UEditor.Net
         }
         private static JObject _Items;
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public static T GetValue<T>(string key)
         {
             return Items[key].Value<T>();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public static String[] GetStringList(string key)
         {
             return Items[key].Select(x => x.Value<String>()).ToArray();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public static String GetString(string key)
         {
             return GetValue<String>(key);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public static int GetInt(string key)
         {
             return GetValue<int>(key);

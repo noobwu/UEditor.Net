@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 
@@ -11,17 +12,28 @@ namespace UEditor.Net
     /// </summary>
     public class NotSupportedHandler : Handler
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
         public NotSupportedHandler(HttpContext context)
             : base(context)
         {
         }
-
-        public override void Process()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public async override Task Process()
         {
-            WriteJson(new
+            await Task.Factory.StartNew(() =>
             {
-                state = "action 参数为空或者 action 不被支持。"
+                WriteJson(new
+                {
+                    state = "action 参数为空或者 action 不被支持。"
+                });
             });
+
         }
     }
 }

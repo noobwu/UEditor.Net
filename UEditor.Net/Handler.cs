@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
-
+using System.Threading.Tasks;
 
 namespace UEditor.Net
 {
@@ -27,7 +27,7 @@ namespace UEditor.Net
         /// <summary>
         /// 
         /// </summary>
-        public abstract void Process();
+        public abstract Task Process();
         /// <summary>
         /// 
         /// </summary>

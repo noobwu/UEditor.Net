@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using UEditor.Net;
@@ -16,7 +17,7 @@ namespace UEditor.WebApi.Controllers
         /// <summary>
         /// 
         /// </summary>
-        protected  string _uploadDir = "Uploads";
+        protected string _uploadDir = "Uploads";
         /// <summary>
         /// 
         /// </summary>
@@ -28,19 +29,20 @@ namespace UEditor.WebApi.Controllers
         /// 
         /// </summary>
         /// <param name="uploadDir"></param>
-        protected void InitUploadDir(string uploadDir= "Uploads",string configPath= "~/App_Data/Configs/UEditorConfig.json")
+        protected void InitUploadDir(string uploadDir = "Uploads", string configPath = "~/App_Data/Configs/UEditorConfig.json")
         {
             if (string.IsNullOrEmpty(uploadDir)) throw new ArgumentNullException("uploadDir  is  null");
             _uploadDir = uploadDir;
             Config.InitConfig(configPath);
         }
+
         // GET: UEditor
         /// <summary>
         /// 
         /// </summary>
         [HttpGet]
         [HttpPost]
-        public void Index()
+        public async Task Index()
         {
             if (string.IsNullOrEmpty(_uploadDir))
                 throw new ArgumentNullException("uploadDir  is  null");
@@ -61,7 +63,7 @@ namespace UEditor.WebApi.Controllers
                 case "uploadimage":
                     actionHanler = new UploadHandler(context, new UploadConfig()
                     {
-                        UploadDir=_uploadDir,
+                        UploadDir = _uploadDir,
                         AllowExtensions = Config.GetStringList("imageAllowFiles"),
                         PathFormat = Config.GetString("imagePathFormat"),
                         SizeLimit = Config.GetInt("imageMaxSize"),
@@ -104,7 +106,7 @@ namespace UEditor.WebApi.Controllers
                     actionHanler = new ListFileManager(context, _uploadDir, Config.GetString("imageManagerListPath"), Config.GetStringList("imageManagerAllowFiles"));
                     break;
                 case "listfile":
-                    actionHanler = new ListFileManager(context,_uploadDir, Config.GetString("fileManagerListPath"), Config.GetStringList("fileManagerAllowFiles"));
+                    actionHanler = new ListFileManager(context, _uploadDir, Config.GetString("fileManagerListPath"), Config.GetStringList("fileManagerAllowFiles"));
                     break;
                 case "catchimage":
                     actionHanler = new CrawlerHandler(context);
@@ -113,7 +115,7 @@ namespace UEditor.WebApi.Controllers
                     actionHanler = new NotSupportedHandler(context);
                     break;
             }
-            actionHanler.Process();
+            await actionHanler.Process();
             // return Ok<string>(actionHanler.Process());
             //context.ApplicationInstance.CompleteRequest();
             //context.Response.End();

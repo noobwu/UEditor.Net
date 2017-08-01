@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 
 
@@ -13,18 +14,33 @@ namespace UEditor.Net
     /// </summary>
     public class UploadHandler : Handler
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
+        public const int BUFFER_SIZE = 4096;
+        /// <summary>
+        /// 
+        /// </summary>
         public UploadConfig UploadConfig { get; private set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public UploadResult Result { get; private set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="config"></param>
         public UploadHandler(HttpContext context, UploadConfig config)
             : base(context)
         {
             this.UploadConfig = config;
             this.Result = new UploadResult() { State = UploadState.Unknown };
         }
-
-        public override void Process()
+        /// <summary>
+        /// 
+        /// </summary>
+        public async override Task Process()
         {
             byte[] uploadFileBytes = null;
             string uploadFileName = null;
@@ -55,7 +71,8 @@ namespace UEditor.Net
                 uploadFileBytes = new byte[file.ContentLength];
                 try
                 {
-                    file.InputStream.Read(uploadFileBytes, 0, file.ContentLength);
+                    await file.InputStream.ReadAsync(uploadFileBytes, 0, file.ContentLength);
+                   //file.InputStream.Read(uploadFileBytes, 0, file.ContentLength);
                 }
                 catch (Exception)
                 {
@@ -78,7 +95,15 @@ namespace UEditor.Net
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(localPath));
                 }
-                File.WriteAllBytes(localPath, uploadFileBytes);
+                //File.WriteAllBytes(localPath, uploadFileBytes);
+                using (var fs = new FileStream(path: localPath,mode: FileMode.Create,
+                                      access: FileAccess.Write,
+                                      share: FileShare.None,
+                                      bufferSize: 4096,
+                                      useAsync: true))
+                {
+                     await fs.WriteAsync(uploadFileBytes, 0, uploadFileBytes.Length);
+                }
                 Result.Url = savePath;
                 Result.State = UploadState.Success;
             }
@@ -92,7 +117,9 @@ namespace UEditor.Net
                 WriteResult();
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         private void WriteResult()
         {
             this.WriteJson(new
@@ -104,7 +131,11 @@ namespace UEditor.Net
                 error = Result.ErrorMessage
             });
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="state"></param>
+        /// <returns></returns>
         private string GetStateMessage(UploadState state)
         {
             switch (state)
@@ -122,19 +153,29 @@ namespace UEditor.Net
             }
             return "未知错误";
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
         private bool CheckFileType(string filename)
         {
             var fileExtension = Path.GetExtension(filename).ToLower();
             return UploadConfig.AllowExtensions.Select(x => x.ToLower()).Contains(fileExtension);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="size"></param>
+        /// <returns></returns>
         private bool CheckFileSize(int size)
         {
             return size < UploadConfig.SizeLimit;
         }
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class UploadConfig
     {
         /// <summary>
@@ -171,7 +212,9 @@ namespace UEditor.Net
         /// </summary>
         public string Base64Filename { get; set; }
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class UploadResult
     {
         public UploadState State { get; set; }
@@ -180,7 +223,9 @@ namespace UEditor.Net
 
         public string ErrorMessage { get; set; }
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public enum UploadState
     {
         Success = 0,

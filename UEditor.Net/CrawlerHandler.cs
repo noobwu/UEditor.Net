@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace UEditor.Net
@@ -14,7 +15,7 @@ namespace UEditor.Net
     public class CrawlerHandler : Handler
     {
         private string[] Sources;
-        private Crawler[] Crawlers;
+        private List<Crawler> Crawlers;
         /// <summary>
         /// 
         /// </summary>
@@ -24,7 +25,7 @@ namespace UEditor.Net
         /// <summary>
         /// 
         /// </summary>
-        public override void Process()
+        public async override Task Process()
         {
             Sources = Request.Form.GetValues("source[]");
             if (Sources == null || Sources.Length == 0)
@@ -35,7 +36,11 @@ namespace UEditor.Net
                 });
                 return;
             }
-            Crawlers = Sources.Select(x => new Crawler(x, Server).Fetch()).ToArray();
+            Crawlers = new List<Crawler>();
+            foreach (var item in Sources)
+            {
+                Crawlers.Add(await new Crawler(item, Server).Fetch());
+            }
             WriteJson(new
             {
                 state = "SUCCESS",
@@ -83,10 +88,10 @@ namespace UEditor.Net
         /// 
         /// </summary>
         /// <returns></returns>
-        public Crawler Fetch()
+        public async Task<Crawler> Fetch()
         {
             var request = HttpWebRequest.Create(this.SourceUrl) as HttpWebRequest;
-            using (var response = request.GetResponse() as HttpWebResponse)
+            using (var response =await request.GetResponseAsync() as HttpWebResponse)
             {
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
@@ -119,7 +124,15 @@ namespace UEditor.Net
                         }
                         bytes = ms.ToArray();
                     }
-                    File.WriteAllBytes(savePath, bytes);
+                    //File.WriteAllBytes(savePath, bytes);
+                    using (var fs = new FileStream(path: savePath, mode: FileMode.Create,
+                                    access: FileAccess.Write,
+                                    share: FileShare.None,
+                                    bufferSize: 4096,
+                                    useAsync: true))
+                    {
+                        await fs.WriteAsync(bytes, 0, bytes.Length);
+                    }
                     State = "SUCCESS";
                 }
                 catch (Exception e)

@@ -1,0 +1,7 @@
+G:\Projects\NET\Framework\Noob\Orchard\SDK\NoobSDK\UEditor.Net\UEditor.Net\bin\Release\UEditor.Net.dll
+G:\Projects\NET\Framework\Noob\Orchard\SDK\NoobSDK\UEditor.Net\UEditor.Net\bin\Release\UEditor.Net.pdb
+G:\Projects\NET\Framework\Noob\Orchard\SDK\NoobSDK\UEditor.Net\UEditor.Net\bin\Release\Newtonsoft.Json.dll
+G:\Projects\NET\Framework\Noob\Orchard\SDK\NoobSDK\UEditor.Net\UEditor.Net\bin\Release\Newtonsoft.Json.xml
+G:\Projects\NET\Framework\Noob\Orchard\SDK\NoobSDK\UEditor.Net\UEditor.Net\obj\Release\UEditor.Net.csprojResolveAssemblyReference.cache
+G:\Projects\NET\Framework\Noob\Orchard\SDK\NoobSDK\UEditor.Net\UEditor.Net\obj\Release\UEditor.Net.dll
+G:\Projects\NET\Framework\Noob\Orchard\SDK\NoobSDK\UEditor.Net\UEditor.Net\obj\Release\UEditor.Net.pdb
