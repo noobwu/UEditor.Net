@@ -1,6 +1,0 @@
-G:\Projects\NET\Framework\Noob\Orchard\SDK\NoobSDK\UEditor.Net\UEditor.Net\bin\Debug\UEditor.Net.dll
-G:\Projects\NET\Framework\Noob\Orchard\SDK\NoobSDK\UEditor.Net\UEditor.Net\bin\Debug\UEditor.Net.pdb
-G:\Projects\NET\Framework\Noob\Orchard\SDK\NoobSDK\UEditor.Net\UEditor.Net\bin\Debug\Newtonsoft.Json.dll
-G:\Projects\NET\Framework\Noob\Orchard\SDK\NoobSDK\UEditor.Net\UEditor.Net\bin\Debug\Newtonsoft.Json.xml
-G:\Projects\NET\Framework\Noob\Orchard\SDK\NoobSDK\UEditor.Net\UEditor.Net\obj\Debug\UEditor.Net.dll
-G:\Projects\NET\Framework\Noob\Orchard\SDK\NoobSDK\UEditor.Net\UEditor.Net\obj\Debug\UEditor.Net.pdb
